@@ -1,0 +1,3 @@
+* Beagle ui
+Clojurescript Webapp to provide UI for Beagle Powerpoint Search tool.
+
