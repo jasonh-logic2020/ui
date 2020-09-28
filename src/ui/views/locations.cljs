@@ -12,7 +12,6 @@
    [fork.reagent :as fork-reagent]
    [vlad.core :as vlad]
    [tick.alpha.api :as t]
-   [ui.views.policies :as up]
    ["react" :as react]
    ["@material-ui/icons" :as icons]
    ["@material-ui/core" :refer [Badge Container Grid Paper FormControl
