@@ -38,6 +38,4 @@ nashorn_code_cache
 *.cache.aot.edn
 *.cache.aot.json
 .node_repl
-package.json
-package-lock.json
 **/.cpcache/**
