@@ -3,7 +3,6 @@
    [reagent.dom :as rdom]
    [re-frame.core :as rf]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
-   [tick.alpha.api :as t]
    ["react" :as react]
    ["@material-ui/core" :refer [ThemeProvider createMuiTheme]]
    ["@material-ui/core" :refer [ThemeProvider createMuiTheme
@@ -15,6 +14,7 @@
                                 Dialog DialogTitle DialogActions Paper
                                 DialogContent DialogContentText] :as mui]
    [goog.object :as gobj]
+   [ui.views.locations :as locations]
    [ui.routes :as routes]
    [ui.components.wrapper :as wrapper]))
 
