@@ -23,7 +23,7 @@ pom.xml
 .repl*
 *.swp
 *.zip
-**/public/**
+**/public/js/**
 **/.shadow-cljs/**
 clojurescript_release_*
 closure-release-*
