@@ -40,7 +40,6 @@
  (fn-traced [db _]
             (:edit-open? db)))
 
-
 ;;; Events
 
 
@@ -95,7 +94,7 @@
                                            :id (get values "id")}
                                           x))
                                  (:locations db)))
-             :dispatch [::add-resolved-form props]}))
+             :dispatch [::edit-resolved-form props]}))
 
 (rf/reg-event-fx
  ::edit-resolved-form
@@ -200,9 +199,6 @@
                     :name      "policy"
                     :value     (values "policy")
                     :on-blur   handle-blur
-                    ;;   material ui does something funky with the
-                    ;;   event target so a custom handle-change is
-                    ;;   required
                     :on-change #(swap! state
                                        assoc-in [:values "policy"]
                                        (-> % .-target .-value))
@@ -231,7 +227,6 @@
                    :variant  "contained"
                    :label    "Save Edits"} "Update"]]]]))
 
-
 (defn edit-dialog [props]
   [fork/form {:form-id         "edit"
               :initial-values  (w/stringify-keys @(rf/subscribe
@@ -244,64 +239,53 @@
               :clean-on-unmount?  true
               :props       {:is-open? (rf/subscribe
                                        [:edit-open?])}
-              ;; :on-submit-response {400 "client error"
-              ;;                      500 "server error"}
               :on-submit #(rf/dispatch [::edit-submit-handler %])}
    (partial edit-dialog-form props)])
-
 
 (defn location-table [{:keys [^js classes] :as props}]
   (let [locs (rf/subscribe [:locations])]
     (fn []
-      [:<>
-       [:> Grid {:justify "space-between" :container true}
-        [:> Grid {:item true}
-         [:> mui/Typography {:component     "h2"
-                             :variant       "h6"
-                             :color         "primary"
-                             :gutter-bottom true}
-          "Scan Locations"]]]
-       [:> mui/Table {:size "small"}
-        [:> mui/TableHead
-         [:> mui/TableRow {:class (.-hoverable classes)}
-          [:> mui/TableCell "Name"]
-          [:> mui/TableCell "URL"]
-          [:> mui/TableCell "Policy"]
-          [:> mui/TableCell {:align "center"} "Status"]
-          [:> mui/TableCell "Last"]
-          [:> mui/TableCell " "]]]
-        [:> mui/TableBody
-         (for [{:keys [id name url policy status ts] :as loc} @locs]
-           (let [this-id (str "row-" id)]
-             ^{:key this-id}
-             [:> mui/TableRow
-              {:hover true
-               :id    this-id
-               :class this-id
-               :key   this-id }
-              [:> mui/TableCell [:> Link name]]
-              [:> mui/TableCell [:> Link url]]
-              [:> mui/TableCell policy]
-              (if (= :success (first status))
-                [:> mui/TableCell {:align "center"
-                                   :style {:color "Green"}}
-                 [:> Icon [:> icons/Check] ]]
-                [:> mui/TableCell {:align "center"
-                                   :style {:color "Red"}}
-                 [:> Icon
-                  [:> Badge {:badgeContent (second status)
-                             :color        "error"}
-                   [:> icons/Close]]]])
-              [:> mui/TableCell (arco/time-since [ts])]
-              [:> mui/TableCell
-               [:> mui/Grid {:container true}
-                [:> Tooltip {:title (str "Edit " name)}
-                 [:> IconButton {:aria-label "edit"
-                                 :color      "primary"
-                                 :class      (.-avatar classes)
-                                 :on-click   #(rf/dispatch
-                                               [::edit-location loc])}
-                  [:> icons/Edit]]]] ]]))]] ])))
+      [:> mui/Table {:size "small"}
+       [:> mui/TableHead
+        [:> mui/TableRow {:class (.-hoverable classes)}
+         [:> mui/TableCell "Name"]
+         [:> mui/TableCell "URL"]
+         [:> mui/TableCell "Policy"]
+         [:> mui/TableCell {:align "center"} "Status"]
+         [:> mui/TableCell "Last"]
+         [:> mui/TableCell " "]]]
+       [:> mui/TableBody
+        (for [{:keys [id name url policy status ts] :as loc} @locs]
+          (let [this-id (str "row-" id)]
+            ^{:key this-id}
+            [:> mui/TableRow
+             {:hover true
+              :id    this-id
+              :class this-id
+              :key   this-id }
+             [:> mui/TableCell [:> Link name]]
+             [:> mui/TableCell [:> Link url]]
+             [:> mui/TableCell policy]
+             (if (= :success (first status))
+               [:> mui/TableCell {:align "center"
+                                  :style {:color "Green"}}
+                [:> Icon [:> icons/Check] ]]
+               [:> mui/TableCell {:align "center"
+                                  :style {:color "Red"}}
+                [:> Icon
+                 [:> Badge {:badgeContent (second status)
+                            :color        "error"}
+                  [:> icons/Close]]]])
+             [:> mui/TableCell (arco/time-since [ts])]
+             [:> mui/TableCell
+              [:> mui/Grid {:container true}
+               [:> Tooltip {:title (str "Edit " name)}
+                [:> IconButton {:aria-label "edit"
+                                :color      "primary"
+                                :class      (.-avatar classes)
+                                :on-click   #(rf/dispatch
+                                              [::edit-location loc])}
+                 [:> icons/Edit]]]] ]]))]] )))
 
 
 (defn main [{:keys [^js classes]}]
