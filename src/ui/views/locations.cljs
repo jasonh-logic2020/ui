@@ -228,19 +228,20 @@
                    :label    "Save Edits"} "Update"]]]]))
 
 (defn edit-dialog [props]
-  [fork/form {:form-id         "edit"
-              :initial-values  (w/stringify-keys @(rf/subscribe
-                                                   [:modal-data]))
-              :validation #(-> (vlad/validate validation %)
-                               (vlad/assign-names field-names)
-                               (vlad/translate-errors vlad/english-translation))
-              :path               :form
-              :prevent-default?   true
-              :clean-on-unmount?  true
-              :props       {:is-open? (rf/subscribe
-                                       [:edit-open?])}
-              :on-submit #(rf/dispatch [::edit-submit-handler %])}
-   (partial edit-dialog-form props)])
+  (when-let [initial-values @(rf/subscribe [:modal-data])]
+    [fork/form {:form-id         "edit"
+                :initial-values  (w/stringify-keys initial-values)
+                :validation
+                #(-> (vlad/validate validation %)
+                     (vlad/assign-names field-names)
+                     (vlad/translate-errors vlad/english-translation))
+                :path               :form
+                :prevent-default?   true
+                :clean-on-unmount?  true
+                :props       {:is-open? (rf/subscribe
+                                         [:edit-open?])}
+                :on-submit #(rf/dispatch [::edit-submit-handler %])}
+     (partial edit-dialog-form props)]))
 
 (defn location-table [{:keys [^js classes] :as props}]
   (let [locs (rf/subscribe [:locations])]
